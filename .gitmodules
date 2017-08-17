@@ -1,0 +1,3 @@
+[submodule "Ads/rekognition"]
+	path = Ads/rekognition
+	url = https://github.com/achachw/rekognition/
