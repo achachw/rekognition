@@ -1,3 +1,6 @@
 [submodule "Ads/rekognition"]
 	path = Ads/rekognition
 	url = https://github.com/achachw/rekognition/
+[submodule "Ads"]
+	path = Ads
+	url = https://github.com/achachw/Ads
