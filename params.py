@@ -35,7 +35,8 @@ COUPLE_SENIOR=500
 
 FAMILLE_AVEC_ENFANT=6
 
-
+aws_access_key_id = AKIAJKXG5LVICNHO3N4Q
+aws_secret_access_key = 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
 
 def print_withTimeStamp(toPrint):
     ts = datetime.datetime.utcnow()
