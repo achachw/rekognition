@@ -97,3 +97,6 @@ def definirCible(nbMale, nbFemale, nbOld, nbYoung, nbChild):
         return PARAM.FAMILLE_AVEC_ENFANT
 
 
+#mixte tout
+    if (((nbFemale>1)and(nbMale>=1))or ((nbMale>1)and(nbFemale>=1))):
+	return PARAM.MIXTE
