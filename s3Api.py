@@ -22,7 +22,11 @@ def getAdsURL(bucket, cible):
     return "AD NOT FOUND!"
 
 def getLocallyAds(cible):
-    files = os.listdir(PARAM.ADS_DIRECTORY+str(cible)+"/")
+    if (PARAM.ON_PI):
+	local_directory=PARAM.ADS_PI_DIRECTORY
+    else:
+	local_directory=PARAM.ADS_MAC_DIRECTORY
+    files = os.listdir(local_directory+str(cible)+"/")
     index = random.randrange(0, len(files))
-    return files[index]
+    return local_directory+str(cible) +"/" +files[index]
     
