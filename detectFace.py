@@ -117,7 +117,7 @@ if (PARAM.ON_PI==1):
 	while True:
 		print "IN THE LOOP"
 		time.sleep(5)
-		camera.capture('image_taken.jpg')
+		camera.capture('image_taken.jpg', resize=(250, 150))
 		opencv_faces, opencv_faces_detected=OPEN_CV_STUFF('image_taken.jpg')
 		if (opencv_faces_detected>0):
 			image_path_to_display=AWS_STUFF('image_taken.jpg')
