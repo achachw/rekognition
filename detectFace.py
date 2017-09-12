@@ -4,21 +4,26 @@
 import cv2
 import sys, time, datetime
 import rekognitionApi as api
+import s3Api
+import displayAd as ad
+import params as PARAM
 
 # Get user supplied values
 imagePath = sys.argv[1]
 #/usr/local/Cellar/opencv3/3.2.0/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml
 
 cascPath = '/usr/local/Cellar/opencv3/3.2.0/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml'
-def print_withTimeStamp(toPrint):
-    ts = datetime.datetime.utcnow()
-    print (toPrint + ' >> at ' + str(ts))
+
+
+
+
+
 
 
 ####################################
 # OPEN_CV STUFF
 ####################################
-print_withTimeStamp('Begining of OPEN_CV treatment')
+PARAM.print_withTimeStamp('>>> Begining of OPEN_CV treatment')
 
 # 1. Create the haar cascade
 faceCascade = cv2.CascadeClassifier(cascPath)
@@ -38,7 +43,7 @@ faces = faceCascade.detectMultiScale(
     flags = cv2.CASCADE_SCALE_IMAGE
 )
 
-print_withTimeStamp("((OPEN_CV)) Found {0} faces!".format(len(faces)))
+PARAM.print_withTimeStamp(">>> END of OPEN_CV treatment, Found {0} faces!".format(len(faces)))
 
 ####################################
 # DEBUG, DRAW, ...
@@ -54,56 +59,52 @@ print_withTimeStamp("((OPEN_CV)) Found {0} faces!".format(len(faces)))
 ####################################
 # AWS STUFF
 ####################################
-print_withTimeStamp('Begining of AWS treatment')
-
-def printLabelsInformation(labels):
-    for l in labels:
-        print('Label ' + l['Name'] + ', confidence: ' + str(l['Confidence']))
-
-def printFaceInformation(face, faceCounter):
-    print('	*** Face ' + str(faceCounter) + ' detected, confidence: ')+str(face['Confidence'])
-    print('Gender: ')+face['Gender']['Value']
-    # You need boto3>=1.4.4 for AgeRange
-    print('Age: ')+str(face['AgeRange']['Low'])+"-"+str(face['AgeRange']['High'])
-    if (face['Beard']['Value']):
-        print ('Beard')
-    if (face['Mustache']['Value']):
-        print ('Mustache')
-    if (face['Eyeglasses']['Value']):
-        print ('Eyeglasses')
-    if (face['Sunglasses']['Value']):
-        print ('Sunglasses')
-    for e in face['Emotions']:
-        print e['Type']+' '+str(e['Confidence'])
+PARAM.print_withTimeStamp('>>> Begining of AWS treatment')
 
 
 
-reko = api.connectToRekognitionService()
+if (PARAM.AWS_CONNECT):
+    reko = api.connectToRekognitionService()
 
-labels = api.detectLabels(reko, imagePath, maxLabels=10, minConfidence=70.0)
+if (PARAM.AWS_CONNECT):
+    labels = api.detectLabels(reko, imagePath, maxLabels=10, minConfidence=70.0)
 
-printLabelsInformation(labels)
+if (PARAM.DEBUG) and (PARAM.AWS_CONNECT):
+    PARAM.printLabelsInformation(labels)
 
-faceList = api.detectFaces(reko, imagePath)
-faceCounter = 0
-for face in faceList:
-    printFaceInformation(face, faceCounter)
-    faceCounter=faceCounter+1
+if (PARAM.AWS_CONNECT):
+    faceList = api.detectFaces(reko, imagePath)
+    faceCounter = 0
 
 
-if (faceCounter == 0):
-    message = "No face has been detected, sorry"
-else:
-    if (faceCounter == 1):
-        message = "A single face has been detected"
-    else:
-        message = str(faceCounter)+ " faces have been detected"
 
-labelText = ''
-for l in labels:
-    if (l['Confidence'] > 80.0):
-        labelText = labelText + l['Name'] + ", "
 
+if (PARAM.AWS_CONNECT):
+    for face in faceList:
+        if (PARAM.DEBUG):
+           PARAM.printFaceInformation(face, faceCounter)
+
+        ad.FaceTreatment(face, faceCounter)
+        faceCounter=faceCounter+1
+
+####################################
+PARAM.print_withTimeStamp('>>> END of AWS treatment')
+
+
+print ('	*** nbMale ' + str(ad.nbMale) )
+print ('	*** nbFemale ' + str(ad.nbFemale) )
+print ('	*** nbOld ' + str(ad.nbOld) )
+print ('	*** nbYoung ' + str(ad.nbYoung) )
+print ('	*** nbChild ' + str(ad.nbChild) )
+
+bucket=s3Api.connectToS3()
+cible=ad.definirCible(ad.nbMale, ad.nbFemale, ad.nbOld,ad.nbYoung, ad.nbChild)
+url_to_display=s3Api.getAdsURL(bucket, cible)
+
+print "Main cible= " + str(cible)
+print "Main url= " + url_to_display
+
+ad.ResetCounter()
 
 
 
