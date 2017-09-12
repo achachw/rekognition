@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, random
 import params as PARAM
 import boto3
 
@@ -20,3 +20,9 @@ def getAdsURL(bucket, cible):
 		return url 
         	
     return "AD NOT FOUND!"
+
+def getLocallyAds(cible):
+    files = os.listdir(PARAM.ADS_DIRECTORY+str(cible)+"/")
+    index = random.randrange(0, len(files))
+    return files[index]
+    

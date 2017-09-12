@@ -9,10 +9,10 @@ import boto3
 if PARAM.TEST_MODE==0:
     nbMale = nbFemale = nbOld = nbYoung = nbChild = 0
 else:
-    nbMale = 0
-    nbFemale = 3
-    nbOld = 3
-    nbYoung = 0
+    nbMale = 1
+    nbFemale = 0
+    nbOld = 0
+    nbYoung = 1	
     nbChild = 0
 
 def ResetCounter():

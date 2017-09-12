@@ -99,10 +99,13 @@ print ('	*** nbChild ' + str(ad.nbChild) )
 
 bucket=s3Api.connectToS3()
 cible=ad.definirCible(ad.nbMale, ad.nbFemale, ad.nbOld,ad.nbYoung, ad.nbChild)
-url_to_display=s3Api.getAdsURL(bucket, cible)
+#url_to_display=s3Api.getAdsURL(bucket, cible)
+image_path_to_display=s3Api.getLocallyAds(cible)
+
 
 print "Main cible= " + str(cible)
-print "Main url= " + url_to_display
+print "Main image_path_to_display= " + PARAM.ADS_DIRECTORY + "/" + image_path_to_display
+#print "Main url= " + url_to_display
 
 ad.ResetCounter()
 
