@@ -100,11 +100,22 @@ print ('	*** nbChild ' + str(ad.nbChild) )
 bucket=s3Api.connectToS3()
 cible=ad.definirCible(ad.nbMale, ad.nbFemale, ad.nbOld,ad.nbYoung, ad.nbChild)
 #url_to_display=s3Api.getAdsURL(bucket, cible)
-image_path_to_display=s3Api.getLocallyAds(cible)
+image_path_to_display=PARAM.ADS_DIRECTORY + "/" + str(cible) +"/" + s3Api.getLocallyAds(cible)
 
 
 print "Main cible= " + str(cible)
-print "Main image_path_to_display= " + PARAM.ADS_DIRECTORY + "/" + image_path_to_display
+print "Main image_path_to_display= " + image_path_to_display
+
+if (PARAM.ON_PI):
+     os.system( "fbi -noverbose " + image_path_to_display)
+else:
+     image_to_display=cv2.imread(image_path_to_display)	
+     for (x, y, w, h) in faces:
+            
+            cv2.imshow("Faces found" ,image_to_display)
+            cv2.waitKey(0)
+	    cv2.destroyAllWindows()
+	
 #print "Main url= " + url_to_display
 
 ad.ResetCounter()

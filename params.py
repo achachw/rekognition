@@ -3,6 +3,7 @@ import sys, time, datetime
 TEST_MODE=1
 DEBUG=1
 AWS_CONNECT=0
+ON_PI=1
 
 
 CLIENT_ID="X"
@@ -36,8 +37,8 @@ COUPLE_SENIOR=500
 FAMILLE_AVEC_ENFANT=6
 MIXTE=7
 
-ADS_DIRECTORY="/Users/wachach/Documents/CISCO/AWS/TheScript/rekognition/ads/"
-#ADS_DIRECTORY="/home/pi/ads/"
+#ADS_DIRECTORY="/Users/wachach/Documents/CISCO/AWS/TheScript/rekognition/ads/"
+ADS_DIRECTORY="/home/pi/ads/"
 
 def print_withTimeStamp(toPrint):
     ts = datetime.datetime.utcnow()
